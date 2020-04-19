@@ -55,7 +55,7 @@ def report():
 
     if not os.path.exists("html"):
         os.makedirs("html")
-    shutil.copy("valgrind.css", "html")
+    shutil.copy(os.path.join(os.path.dirname(__file__), "data", "valgrind.css"), "html")
 
     for srcfile in sorted(srcfiles):
         name = os.path.splitext(os.path.basename(srcfile))
