@@ -15,6 +15,9 @@ def report():
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="Valgrind XML file name")
     parser.add_argument("--source", default=".", help="specifies the source directory")
+    parser.add_argument(
+        "--summary", default=False, action="store_true", help="Print a summary"
+    )
     args = parser.parse_args()
 
     root = et.parse(args.input).getroot()
@@ -75,7 +78,8 @@ def report():
                     line = src.readline()
                     l += 1
             dest.write("</body>\n<html>")
-        print(f"{srcfile}")
-        print("{} errors".format(len(srcfiles[srcfile])))
-        for iss in sorted(srcfiles[srcfile], key=lambda error: error.line):
-            print(f"\tline {iss.line}: {iss.what}")
+        if args.summary:
+            print(f"{srcfile}")
+            print("{} errors".format(len(srcfiles[srcfile])))
+            for iss in sorted(srcfiles[srcfile], key=lambda error: error.line):
+                print(f"\tline {iss.line}: {iss.what}")
