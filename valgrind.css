@@ -1,0 +1,11 @@
+p.normal {
+    font-size: 10pt;
+    color: black;
+    background-color: white;
+}
+
+p.error {
+    font-size: 10pt;
+    color: black;
+    background-color: palevioletred;
+}
