@@ -64,7 +64,11 @@ def report():
             dest.write(
                 "<html>\n<head>\n<link href='valgrind.css' rel='stylesheet' type='text/css'></head>\n<body>"
             )
-            dest.write("<h1>{}</h1>".format(os.path.relpath(srcfile, srcpath)))
+            dest.write(
+                "<h1>{}</h1><pre class='code'>".format(
+                    os.path.relpath(srcfile, srcpath)
+                )
+            )
             with open(srcfile, "r") as src:
                 line = src.readline()
                 l = 1
@@ -74,10 +78,10 @@ def report():
                         if l == iss.line:
                             klass = "error"
                             break
-                    dest.write(f"<p class='{klass}'>{l} {line}</p>")
+                    dest.write("<code class='{}'>{}</code>\n".format(klass, line[:-1]))
                     line = src.readline()
                     l += 1
-            dest.write("</body>\n<html>")
+            dest.write("</pre></body>\n<html>")
         if args.summary:
             print(f"{srcfile}")
             print("{} errors".format(len(srcfiles[srcfile])))

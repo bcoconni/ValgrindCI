@@ -1,11 +1,21 @@
-p.normal {
-    font-size: 10pt;
-    color: black;
-    background-color: white;
+pre.code {
+    white-space: pre-wrap;
 }
 
-p.error {
-    font-size: 10pt;
-    color: black;
-    background-color: palevioletred;
+pre.code:before {
+    counter-reset: listing;
 }
+
+pre.code code {
+    counter-increment: listing;
+}
+
+pre.code code::before {
+    content: counter(listing) " ";
+    display: inline-block;
+    color: gray;
+}
+
+code.error {
+    background-color: darksalmon;
+} 
