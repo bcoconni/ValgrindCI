@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Valgrind report</title>
+    <link href='valgrind.css' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <div class="global">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Source file name</th>
+                    <th>Valgrind errors</th>
+                </tr>
+                {% for item in source_list %}
+                <tr>
+                    <td> <a href="{{ item.link }}">{{ item.filename }}</a></td>
+                    <td> {{ item.errors }} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

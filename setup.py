@@ -8,7 +8,7 @@ setup(
     license="GNU General Public License v3.0",
     packages=find_packages(),
     package_dir={"valgrind_report": "valgrind_report"},
-    package_data={"valgrind_report": ["data/*.css"]},
+    package_data={"valgrind_report": ["data/*.css", "data/*.html"]},
     include_package_data=True,
     install_requires=["defusedxml", "jinja2"],
 )

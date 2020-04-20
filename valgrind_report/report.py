@@ -64,10 +64,21 @@ def report():
         autoescape=select_autoescape(["html", "xml"]),
     )
     source_template = env.get_template("source_file.html")
+    index_template = env.get_template("summary.html")
+
+    summary = []
 
     for srcfile in sorted(srcfiles):
+        filename = os.path.relpath(srcfile, srcpath)
         name = os.path.splitext(os.path.basename(srcfile))
-        html_filename = os.path.join("html", name[0] + "_" + name[1][1:] + ".html")
+        html_filename = name[0] + "_" + name[1][1:] + ".html"
+        summary.append(
+            {
+                "filename": filename,
+                "errors": len(srcfiles[srcfile]),
+                "link": html_filename,
+            }
+        )
         codelines = []
 
         with open(srcfile, "r") as src:
@@ -79,11 +90,11 @@ def report():
                         break
                 codelines.append({"line": line[:-1], "klass": klass})
 
-        with open(html_filename, "w") as dest:
+        with open(os.path.join("html", html_filename), "w") as dest:
             dest.write(
                 source_template.render(
                     num_errors=len(srcfiles[srcfile]),
-                    source_file_name=os.path.relpath(srcfile, srcpath),
+                    source_file_name=filename,
                     codelines=codelines,
                 )
             )
@@ -93,3 +104,6 @@ def report():
             print("{} errors".format(len(srcfiles[srcfile])))
             for iss in sorted(srcfiles[srcfile], key=lambda error: error.line):
                 print(f"\tline {iss.line}: {iss.what}")
+
+    with open(os.path.join("html", "index.html"), "w") as f:
+        f.write(index_template.render(source_list=summary))
