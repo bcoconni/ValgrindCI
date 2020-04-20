@@ -1,5 +1,6 @@
 pre.code {
     white-space: pre-wrap;
+    border: solid lightgray 1px;
 }
 
 pre.code:before {
@@ -18,4 +19,10 @@ pre.code code::before {
 
 code.error {
     background-color: darksalmon;
-} 
+}
+
+div.global {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100ch;
+}

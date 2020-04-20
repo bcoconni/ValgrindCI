@@ -7,11 +7,14 @@
 </head>
 
 <body>
-    <h1>{{ source_file_name }}</h1>
-    <pre class="code">
-        {% for item in codelines %}
-        <code class="{{ item.klass }}">{{ item.line }}</code>{% endfor %}
-    </pre>
+    <div class="global">
+        <h1>{{ source_file_name }}</h1>
+        <p><b>{{ num_errors }}</b> errors</p>
+        <pre class="code">
+            {% for item in codelines %}
+            <code class="{{ item.klass }} lang-c++">{{ item.line }}</code>{% endfor %}
+        </pre>
+    </div>
 </body>
 
 </html>

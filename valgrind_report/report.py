@@ -82,6 +82,7 @@ def report():
         with open(html_filename, "w") as dest:
             dest.write(
                 source_template.render(
+                    num_errors=len(srcfiles[srcfile]),
                     source_file_name=os.path.relpath(srcfile, srcpath),
                     codelines=codelines,
                 )
