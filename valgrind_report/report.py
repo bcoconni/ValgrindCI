@@ -1,7 +1,7 @@
 import argparse
 import os.path
 import shutil
-import xml.etree.ElementTree as et
+import defusedxml.ElementTree as et
 
 
 class issue:
@@ -14,9 +14,9 @@ class issue:
 def report():
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="Valgrind XML file name")
-    parser.add_argument("--source", default=".", help="specifies the source directory")
+    parser.add_argument("--source", default=".", help="Specifies the source directory")
     parser.add_argument(
-        "--summary", default=False, action="store_true", help="Print a summary"
+        "--summary", default=False, action="store_true", help="Prints a summary"
     )
     args = parser.parse_args()
 

@@ -10,4 +10,5 @@ setup(
     package_dir={"valgrind_report": "valgrind_report"},
     package_data={"valgrind_report": ["data/*.css"]},
     include_package_data=True,
+    install_requires=["defusedxml"],
 )
