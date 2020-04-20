@@ -64,7 +64,7 @@ def report():
         autoescape=select_autoescape(["html", "xml"]),
     )
     source_template = env.get_template("source_file.html")
-    index_template = env.get_template("summary.html")
+    index_template = env.get_template("index.html")
 
     summary = []
 
