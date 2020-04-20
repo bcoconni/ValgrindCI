@@ -1,7 +1,9 @@
 import argparse
 import os.path
 import shutil
+
 import defusedxml.ElementTree as et
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 
 class issue:
@@ -57,31 +59,34 @@ def report():
         os.makedirs("html")
     shutil.copy(os.path.join(os.path.dirname(__file__), "data", "valgrind.css"), "html")
 
+    env = Environment(
+        loader=PackageLoader("valgrind_report", "data"),
+        autoescape=select_autoescape(["html", "xml"]),
+    )
+    source_template = env.get_template("source_file.html")
+
     for srcfile in sorted(srcfiles):
         name = os.path.splitext(os.path.basename(srcfile))
         html_filename = os.path.join("html", name[0] + "_" + name[1][1:] + ".html")
+        codelines = []
+
+        with open(srcfile, "r") as src:
+            for l, line in enumerate(src.readlines()):
+                klass = "normal"
+                for iss in srcfiles[srcfile]:
+                    if l + 1 == iss.line:
+                        klass = "error"
+                        break
+                codelines.append({"line": line[:-1], "klass": klass})
+
         with open(html_filename, "w") as dest:
             dest.write(
-                "<html>\n<head>\n<link href='valgrind.css' rel='stylesheet' type='text/css'></head>\n<body>"
-            )
-            dest.write(
-                "<h1>{}</h1><pre class='code'>".format(
-                    os.path.relpath(srcfile, srcpath)
+                source_template.render(
+                    source_file_name=os.path.relpath(srcfile, srcpath),
+                    codelines=codelines,
                 )
             )
-            with open(srcfile, "r") as src:
-                line = src.readline()
-                l = 1
-                while line:
-                    klass = "normal"
-                    for iss in srcfiles[srcfile]:
-                        if l == iss.line:
-                            klass = "error"
-                            break
-                    dest.write("<code class='{}'>{}</code>\n".format(klass, line[:-1]))
-                    line = src.readline()
-                    l += 1
-            dest.write("</pre></body>\n<html>")
+
         if args.summary:
             print(f"{srcfile}")
             print("{} errors".format(len(srcfiles[srcfile])))
