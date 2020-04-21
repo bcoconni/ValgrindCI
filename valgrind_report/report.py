@@ -62,11 +62,14 @@ def report():
     env = Environment(
         loader=PackageLoader("valgrind_report", "data"),
         autoescape=select_autoescape(["html", "xml"]),
+        trim_blocks=True,
+        lstrip_blocks=True,
     )
     source_template = env.get_template("source_file.html")
     index_template = env.get_template("index.html")
 
     summary = []
+    num_errors = 0
 
     for srcfile in sorted(srcfiles):
         filename = os.path.relpath(srcfile, srcpath)
@@ -79,6 +82,7 @@ def report():
                 "link": html_filename,
             }
         )
+        num_errors += len(srcfiles[srcfile])
         codelines = []
 
         with open(srcfile, "r") as src:
@@ -106,4 +110,4 @@ def report():
                 print(f"\tline {iss.line}: {iss.what}")
 
     with open(os.path.join("html", "index.html"), "w") as f:
-        f.write(index_template.render(source_list=summary))
+        f.write(index_template.render(source_list=summary, num_errors=num_errors))
