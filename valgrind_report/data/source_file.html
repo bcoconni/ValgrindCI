@@ -8,19 +8,24 @@
 
 <body>
     <div class="global">
-        <h1>{{ source_file_name }}</h1>
-        <p><b>{{ num_errors }}</b> errors</p>
-        <a href="#first_error" class="button">Go to First Error</a>
+        <div class="header">
+            <h1>{{ source_file_name }}</h1>
+            <p><b>{{ num_errors }}</b> errors</p>
+            <a href="#first_error" class="button">Go to First Error</a>
+        </div>
         <div class="listing">
-            <pre class="code">
-            {% set ns = namespace(first_error=true) %}
-            {% for item in codelines %}
-                {% if item.klass == "error" %}
-                <span class="anchor"{% if ns.first_error%} {% set ns.first_error = false %}id="first_error"{% endif %}></span>
-                <span class="error_message">{{ item.what }}</span>
-                {% endif %}
-            <code {% if item.klass == "error" %}class="error"{% endif %}>{{ item.line }}</code>
-            {% endfor %}
+            <pre class="start">
+{% set ns = namespace(first_error=true) %}
+{% for item in codelines %}
+    {% if item.klass == "error" %}
+</pre>
+            <span class="anchor" {% if ns.first_error%} {% set ns.first_error = false %} id="first_error"
+                {% endif %}></span>
+            <span class="error_message">{{ item.what }}</span>
+            <pre>
+    {% endif %}
+<code{% if item.klass == "error" %} class="error"{% endif %}>{{ item.line }}</code>
+{% endfor %}
             </pre>
         </div>
     </div>

@@ -1,38 +1,81 @@
+div.global {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100ch;
+    background-color: #fafafa;
+}
+
+div.header {
+    margin: 1ch;
+}
+
 h1 {
     text-align: center;
 }
 
 div.listing {
-    border: solid lightgray 1px;  
-}
-
-pre.code {
-    white-space: pre-wrap;
-    margin-left: 10ch;
-}
-
-pre.code:before {
+    border: solid lightgray 1px;
+    background-color: white;
     counter-reset: listing;
 }
 
-pre.code code {
+a.button {
+    background-color: purple;
+    color: white;
+    margin-bottom: 0.5ch;
+    padding: 0.5ch;
+    text-decoration: none;
+    display: table;
+    border-radius: 5px;
+}
+
+pre.start {
+    margin-top: 1ch;
+    margin-bottom: 0.5ch;
+}
+
+pre {
+    white-space: pre-wrap;
+    margin: 0;
+    margin-top: 0.5ch;
+    margin-left: 50pt;
+}
+
+pre code {
     counter-increment: listing;
 }
 
-pre.code code::before {
+pre code::before {
     content: counter(listing) " ";
     display: inline-block;
     color: gray;
+    background-color: white;
+    width: 5ch;
 }
 
 code.error {
     background-color: lightpink;
+    color: red;
 }
 
-div.global {
-    margin-left: auto;
-    margin-right: auto;
-    width: 100ch;
+table {
+    border: solid 1px black;
+    background-color: white;
+    width: 100%;
+}
+
+th {
+    background-color: lightgray;
+    padding: 0.5ch;
+}
+
+td {
+    padding: 0.3ch;
+    border-bottom: solid 1px lightgray;
+}
+
+td:first-child {
+    padding-left: 1ch;
 }
 
 td:last-child {
@@ -42,10 +85,13 @@ td:last-child {
 .anchor {
     position: absolute;
     transform: translateY(-50vh);
-    visibility: hidden;
 }
 
 .error_message {
     border-top: solid red 1px;
     border-bottom: solid red 1px;
+    background-color: lightyellow;
+    margin: 0;
+    padding: 0.25ch;
+    padding-left: 1ch;
 }
