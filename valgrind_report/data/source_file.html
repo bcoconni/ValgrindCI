@@ -10,9 +10,15 @@
     <div class="global">
         <h1>{{ source_file_name }}</h1>
         <p><b>{{ num_errors }}</b> errors</p>
+        <a href="#first_error">Go to First Error</a>
         <pre class="code">
+            {% set ns = namespace(first_error=true) %}
             {% for item in codelines %}
-            <code class="{{ item.klass }} lang-c++">{{ item.line }}</code>{% endfor %}
+                {%- if ns.first_error and item.klass == "error" %}
+                {% set ns.first_error = false %}<span class="anchor" id="first_error"></span>
+                {%- endif %}
+            <code {% if item.klass == "error" %}class="error"{% endif %}>{{ item.line }}</code>
+            {% endfor %}
         </pre>
     </div>
 </body>

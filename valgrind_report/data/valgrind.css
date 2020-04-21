@@ -34,3 +34,8 @@ div.global {
 td:last-child {
     text-align: center;
 }
+
+.anchor {
+    position: absolute;
+    transform: translateY(-50vh);
+}
