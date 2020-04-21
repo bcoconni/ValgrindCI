@@ -88,11 +88,13 @@ def report():
         with open(srcfile, "r") as src:
             for l, line in enumerate(src.readlines()):
                 klass = "normal"
+                what = None
                 for iss in srcfiles[srcfile]:
                     if l + 1 == iss.line:
                         klass = "error"
+                        what = iss.what
                         break
-                codelines.append({"line": line[:-1], "klass": klass})
+                codelines.append({"line": line[:-1], "klass": klass, "what": what})
 
         with open(os.path.join("html", html_filename), "w") as dest:
             dest.write(

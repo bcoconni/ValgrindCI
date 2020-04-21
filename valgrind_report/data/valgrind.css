@@ -2,9 +2,13 @@ h1 {
     text-align: center;
 }
 
+div.listing {
+    border: solid lightgray 1px;  
+}
+
 pre.code {
     white-space: pre-wrap;
-    border: solid lightgray 1px;
+    margin-left: 10ch;
 }
 
 pre.code:before {
@@ -38,4 +42,10 @@ td:last-child {
 .anchor {
     position: absolute;
     transform: translateY(-50vh);
+    visibility: hidden;
+}
+
+.error_message {
+    border-top: solid red 1px;
+    border-bottom: solid red 1px;
 }
