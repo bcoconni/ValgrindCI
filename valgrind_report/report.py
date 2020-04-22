@@ -2,8 +2,9 @@ import argparse
 import os.path
 import shutil
 
-import defusedxml.ElementTree as et
 from jinja2 import Environment, PackageLoader, select_autoescape
+
+from .parse import ValgrindData
 
 
 class issue:
@@ -22,38 +23,9 @@ def report():
     )
     args = parser.parse_args()
 
-    root = et.parse(args.input).getroot()
-
-    srcpath = os.path.abspath(args.source)
-
-    srcfiles = {}
-    for error in root.findall("error"):
-        for frame in error.findall("stack/frame"):
-            folder = frame.find("dir")
-            srcfile = frame.find("file")
-            line = frame.find("line")
-            if folder is not None:
-                if (
-                    os.path.commonpath([srcpath, folder.text]) == srcpath
-                    and srcfile is not None
-                    and line is not None
-                ):
-                    filename = f"{folder.text}/{srcfile.text}"
-                    new_issue = issue(filename, int(line.text), error.find("what").text)
-                    if filename in srcfiles:
-                        for iss in srcfiles[filename]:
-                            if (
-                                iss.line == new_issue.line
-                                and iss.what == new_issue.what
-                            ):
-                                break
-                        else:
-                            srcfiles[filename].append(new_issue)
-                    else:
-                        srcfiles[filename] = [new_issue]
-                    break
-        else:
-            continue
+    data = ValgrindData()
+    data.load(args.input)
+    # data.set_base_folder(args.source)
 
     if not os.path.exists("html"):
         os.makedirs("html")
@@ -69,47 +41,48 @@ def report():
     index_template = env.get_template("index.html")
 
     summary = []
-    num_errors = 0
+    total_num_errors = 0
+    srcpath = os.path.abspath(args.source)
 
-    for srcfile in sorted(srcfiles):
+    for srcfile in sorted(data.list_source_files()):
+        if os.path.commonpath([srcpath, srcfile]) != srcpath:
+            continue
+        data_srcfile = data.filter_source_file(srcfile)
+        error_lines = data_srcfile.list_lines()
+        num_errors = len(error_lines)
         filename = os.path.relpath(srcfile, srcpath)
         name = os.path.splitext(os.path.basename(srcfile))
         html_filename = name[0] + "_" + name[1][1:] + ".html"
         summary.append(
-            {
-                "filename": filename,
-                "errors": len(srcfiles[srcfile]),
-                "link": html_filename,
-            }
+            {"filename": filename, "errors": num_errors, "link": html_filename,}
         )
-        num_errors += len(srcfiles[srcfile])
+        total_num_errors += num_errors
         codelines = []
 
         with open(srcfile, "r") as src:
             for l, line in enumerate(src.readlines()):
                 klass = "normal"
                 what = None
-                for iss in srcfiles[srcfile]:
-                    if l + 1 == iss.line:
-                        klass = "error"
-                        what = iss.what
-                        break
+                if l + 1 in error_lines:
+                    klass = "error"
+                    what = data_srcfile.filter_line(l + 1).errors[0].what
                 codelines.append({"line": line[:-1], "klass": klass, "what": what})
 
         with open(os.path.join("html", html_filename), "w") as dest:
             dest.write(
                 source_template.render(
-                    num_errors=len(srcfiles[srcfile]),
+                    num_errors=num_errors,
                     source_file_name=filename,
                     codelines=codelines,
                 )
             )
 
         if args.summary:
-            print(f"{srcfile}")
-            print("{} errors".format(len(srcfiles[srcfile])))
-            for iss in sorted(srcfiles[srcfile], key=lambda error: error.line):
-                print(f"\tline {iss.line}: {iss.what}")
+            print(f"{filename}")
+            print("{} errors".format(num_errors))
+            for line in sorted(error_lines):
+                error = data_srcfile.filter_line(line).errors[0]
+                print(f"\tline {line}: {error.what}")
 
     with open(os.path.join("html", "index.html"), "w") as f:
-        f.write(index_template.render(source_list=summary, num_errors=num_errors))
+        f.write(index_template.render(source_list=summary, num_errors=total_num_errors))
