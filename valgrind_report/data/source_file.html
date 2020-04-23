@@ -22,8 +22,8 @@
         <div class="listing">
             <pre class="code">
 <code class="c++">
-{%- set ns = namespace(first_error=true) -%}
-{%- for item in codelines %}
+{%- set ns = namespace(first_error=true) %}
+{% for item in codelines %}
     {% if item.klass == "error" %}
 </code></pre>
             <div class="issue">
@@ -51,8 +51,9 @@
             </div>
             <pre class="code">
 <code class="c++"><span class="line_number">{{ loop.index }}</span><span class="error">{{item.line}}</span>
-    {% endif %}
+    {% else %}
 <span class="line_number">{{ loop.index }}</span>{{item.line}}
+    {% endif %}
 {% endfor -%}
 </code>
             </pre>
