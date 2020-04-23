@@ -90,7 +90,12 @@ table.call_stack {
 
 table.call_stack th {
     background-color: lightyellow;
-    text-align: left;    
+    text-align: left;
+    padding-left: 0;
+}
+
+table.call_stack button {
+    margin: 0 0.25ch;
 }
 
 table.call_stack td {
@@ -108,18 +113,4 @@ table.call_stack pre {
 
 table.call_stack pre code:nth-child(3) {
     background-color: lightpink;
-}
-
-.anchor {
-    position: absolute;
-    transform: translateY(-50vh);
-}
-
-.error_message {
-    border-top: solid red 1px;
-    border-bottom: solid red 1px;
-    background-color: lightyellow;
-    margin: 0;
-    padding: 0.25ch;
-    padding-left: 1ch;
 }

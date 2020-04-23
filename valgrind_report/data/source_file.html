@@ -4,6 +4,9 @@
 <head>
     <title>{{ source_file_name }}</title>
     <link href='valgrind.css' rel='stylesheet' type='text/css'>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="valgrind.js"></script>
 </head>
 
 <body>
@@ -11,7 +14,7 @@
         <div class="header">
             <h1>{{ source_file_name }}</h1>
             <p><b>{{ num_errors }}</b> errors</p>
-            <a href="#first_error" class="button">Go to First Error</a>
+            <button class="next_error">Goto First Error</button>
         </div>
         <div class="listing">
             <pre class="code">
@@ -21,10 +24,11 @@
 </pre>
             <table class="call_stack">
                 <tr>
-                    <th>{{ item.issue.what }}</th>
+                    <th><button class="visibility_call_stack">Show</button> <button class="next_error">Next</button>
+                        <button class="prev_error">Previous</button> {{ item.issue.what }}</th>
                 </tr>
                 {% for frame in item.issue.stack %}
-                <tr>
+                <tr class="stack_frame">
                     <td>{{ frame.fileref }}<br>
                         <code>{{ frame.function }}</code>
                         <pre>
@@ -36,8 +40,6 @@
                 </tr>
                 {% endfor %}
             </table>
-            <span class="anchor" {% if ns.first_error%} {% set ns.first_error = false %} id="first_error"
-                {% endif %}></span>
             <pre class="code">
     {% endif %}
 <code{% if item.klass == "error" %} class="error"{% endif %}>{{ item.line }}</code>

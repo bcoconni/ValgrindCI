@@ -30,6 +30,7 @@ def report():
     if not os.path.exists("html"):
         os.makedirs("html")
     shutil.copy(os.path.join(os.path.dirname(__file__), "data", "valgrind.css"), "html")
+    shutil.copy(os.path.join(os.path.dirname(__file__), "data", "valgrind.js"), "html")
 
     env = Environment(
         loader=PackageLoader("valgrind_report", "data"),
