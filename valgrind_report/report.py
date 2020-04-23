@@ -73,17 +73,17 @@ def report():
                     for frame in current_error.stack[first + 1 :]:
                         stack = {}
                         error_line = frame.line
-                        filename = frame.get_path(None)
+                        fullname = frame.get_path(None)
                         stack["code"] = []
                         stack["function"] = frame.func
-                        if filename is None:
+                        if fullname is None:
                             stack["fileref"] = frame.func
                         else:
                             stack["fileref"] = "{}:{}".format(
                                 frame.get_path(srcpath), error_line
                             )
-                            if os.path.commonpath([srcpath, filename]) == srcpath:
-                                with open(filename, "r") as f:
+                            if os.path.commonpath([srcpath, fullname]) == srcpath:
+                                with open(fullname, "r") as f:
                                     for l, code_line in enumerate(f.readlines()):
                                         if l >= error_line - 3 and l <= error_line + 2:
                                             stack["code"].append(code_line)
