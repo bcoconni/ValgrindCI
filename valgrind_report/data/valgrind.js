@@ -17,4 +17,5 @@ $(document).ready(
             }, 500);
         });
         $("button.prev_error:first").hide();
+        hljs.initHighlighting();
     });

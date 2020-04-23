@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.0/highlight.min.js"></script>
     <script src="valgrind.js"></script>
 </head>
 
@@ -19,10 +21,11 @@
         </div>
         <div class="listing">
             <pre class="code">
-{% set ns = namespace(first_error=true) %}
-{% for item in codelines %}
+<code class="c++">
+{%- set ns = namespace(first_error=true) -%}
+{%- for item in codelines %}
     {% if item.klass == "error" %}
-</pre>
+</code></pre>
             <div class="issue">
                 <h3>{{ item.issue.what }}</h3>
                 <div>
@@ -37,7 +40,7 @@
                                 <code>{{ frame.function }}</code>
                                 <pre>
                         {% for codeline in frame.code -%}
-<code>{{ codeline }}</code>
+<code class="c++">{{ codeline }}</code>
                         {%- endfor -%}
                         </pre>
                             </td>
@@ -47,9 +50,11 @@
                 </div>
             </div>
             <pre class="code">
+<code class="c++"><span class="line_number">{{ loop.index }}</span><span class="error">{{item.line}}</span>
     {% endif %}
-<code{% if item.klass == "error" %} class="error"{% endif %}>{{ item.line }}</code>
-{% endfor %}
+<span class="line_number">{{ loop.index }}</span>{{item.line}}
+{% endfor -%}
+</code>
             </pre>
         </div>
     </div>

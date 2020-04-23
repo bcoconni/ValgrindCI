@@ -42,17 +42,23 @@ pre.code code {
     counter-increment: listing;
 }
 
-pre.code code::before {
-    content: counter(listing) " ";
+span.line_number span {
     display: inline-block;
-    color: gray;
-    background-color: white;
+    color: #707070;
+    background-color: #e8e8e8;
+    text-align: right;
     width: 5ch;
+    margin-right: 1ch;
 }
 
-code.error {
+code.hljs .error {
     background-color: lightpink;
-    color: red;
+}
+
+code.hljs {
+    background-color: white;
+    padding: 0;
+    display: inline;
 }
 
 table {
