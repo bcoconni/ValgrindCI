@@ -14,15 +14,31 @@
             <a href="#first_error" class="button">Go to First Error</a>
         </div>
         <div class="listing">
-            <pre class="start">
+            <pre class="code">
 {% set ns = namespace(first_error=true) %}
 {% for item in codelines %}
     {% if item.klass == "error" %}
 </pre>
+            <table class="call_stack">
+                <tr>
+                    <th>{{ item.issue.what }}</th>
+                </tr>
+                {% for frame in item.issue.stack %}
+                <tr>
+                    <td>{{ frame.fileref }}<br>
+                        <code>{{ frame.function }}</code>
+                        <pre>
+                        {% for codeline in frame.code -%}
+<code>{{ codeline }}</code>
+                        {%- endfor -%}
+                        </pre>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
             <span class="anchor" {% if ns.first_error%} {% set ns.first_error = false %} id="first_error"
                 {% endif %}></span>
-            <span class="error_message">{{ item.what }}</span>
-            <pre>
+            <pre class="code">
     {% endif %}
 <code{% if item.klass == "error" %} class="error"{% endif %}>{{ item.line }}</code>
 {% endfor %}

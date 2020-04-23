@@ -17,6 +17,7 @@ div.listing {
     border: solid lightgray 1px;
     background-color: white;
     counter-reset: listing;
+    padding-top: 1ch;
 }
 
 a.button {
@@ -29,23 +30,19 @@ a.button {
     border-radius: 5px;
 }
 
-pre.start {
-    margin-top: 1ch;
-    margin-bottom: 0.5ch;
-}
-
-pre {
+pre.code {
     white-space: pre-wrap;
     margin: 0;
     margin-top: 0.5ch;
     margin-left: 50pt;
+    margin-bottom: 0.5ch;
 }
 
-pre code {
+pre.code code {
     counter-increment: listing;
 }
 
-pre code::before {
+pre.code code::before {
     content: counter(listing) " ";
     display: inline-block;
     color: gray;
@@ -80,6 +77,37 @@ td:first-child {
 
 td:last-child {
     text-align: center;
+}
+
+table.call_stack {
+    border: 0;
+    border: solid red 1px;
+    border-collapse: collapse;
+    margin-left: 1%;
+    width: 98%;
+    font-size: 11pt;
+}
+
+table.call_stack th {
+    background-color: lightyellow;
+    text-align: left;    
+}
+
+table.call_stack td {
+    text-align: left;
+    border: 0;
+    background-color: lightgray;
+}
+
+table.call_stack pre {
+    font-size: 9pt;
+    margin: 0;
+    margin-left: 2ch;
+    background-color: white;
+}
+
+table.call_stack pre code:nth-child(3) {
+    background-color: lightpink;
 }
 
 .anchor {

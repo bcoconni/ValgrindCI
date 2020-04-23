@@ -62,11 +62,32 @@ def report():
         with open(srcfile, "r") as src:
             for l, line in enumerate(src.readlines()):
                 klass = "normal"
-                what = None
+                issue = {"stack": []}
                 if l + 1 in error_lines:
                     klass = "error"
-                    what = data_srcfile.filter_line(l + 1).errors[0].what
-                codelines.append({"line": line[:-1], "klass": klass, "what": what})
+                    current_error = data_srcfile.filter_line(l + 1).errors[0]
+                    what = current_error.what
+                    issue["what"] = what
+                    first = current_error.find_first_source_reference()
+                    for frame in current_error.stack[first + 1 :]:
+                        stack = {}
+                        error_line = frame.line
+                        filename = frame.get_path(None)
+                        stack["code"] = []
+                        stack["function"] = frame.func
+                        if filename is None:
+                            stack["fileref"] = frame.func
+                        else:
+                            stack["fileref"] = "{}:{}".format(
+                                frame.get_path(srcpath), error_line
+                            )
+                            if os.path.commonpath([srcpath, filename]) == srcpath:
+                                with open(filename, "r") as f:
+                                    for l, code_line in enumerate(f.readlines()):
+                                        if l >= error_line - 3 and l <= error_line + 2:
+                                            stack["code"].append(code_line)
+                        issue["stack"].append(stack)
+                codelines.append({"line": line[:-1], "klass": klass, "issue": issue})
 
         with open(os.path.join("html", html_filename), "w") as dest:
             dest.write(
