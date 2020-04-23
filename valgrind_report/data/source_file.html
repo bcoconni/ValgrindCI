@@ -4,6 +4,7 @@
 <head>
     <title>{{ source_file_name }}</title>
     <link href='valgrind.css' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="valgrind.js"></script>
@@ -22,24 +23,29 @@
 {% for item in codelines %}
     {% if item.klass == "error" %}
 </pre>
-            <table class="call_stack">
-                <tr>
-                    <th><button class="visibility_call_stack">Show</button> <button class="next_error">Next</button>
-                        <button class="prev_error">Previous</button> {{ item.issue.what }}</th>
-                </tr>
-                {% for frame in item.issue.stack %}
-                <tr class="stack_frame">
-                    <td>{{ frame.fileref }}<br>
-                        <code>{{ frame.function }}</code>
-                        <pre>
+            <div class="issue">
+                <h3>{{ item.issue.what }}</h3>
+                <div>
+                    <table class="call_stack">
+                        <tr>
+                            <th><button class="next_error">Next</button>
+                                <button class="prev_error">Previous</button></th>
+                        </tr>
+                        {% for frame in item.issue.stack %}
+                        <tr class="stack_frame">
+                            <td>{{ frame.fileref }}<br>
+                                <code>{{ frame.function }}</code>
+                                <pre>
                         {% for codeline in frame.code -%}
 <code>{{ codeline }}</code>
                         {%- endfor -%}
                         </pre>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
             <pre class="code">
     {% endif %}
 <code{% if item.klass == "error" %} class="error"{% endif %}>{{ item.line }}</code>

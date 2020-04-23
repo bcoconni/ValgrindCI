@@ -79,12 +79,14 @@ td:last-child {
     text-align: center;
 }
 
+div.issue {
+    margin: 0 1ch;
+}
+
 table.call_stack {
     border: 0;
     border: solid red 1px;
     border-collapse: collapse;
-    margin-left: 1%;
-    width: 98%;
     font-size: 11pt;
 }
 
