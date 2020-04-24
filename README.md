@@ -20,7 +20,7 @@ If you are building ValgrindCI from source, these dependencies can be installed 
 ValgrindCI uses the `setuptools` to build. The package can then be installed with `pip`
 ```
 > python setup.py bdist_wheel
-> pip install --no-index -f dist/valgrindci*.whl
+> pip install valgrindci --no-index -f dist/valgrindci*.whl
 ```
 ### Download and install with `pip`
 ValgrindCI is a tool written in Python and can be installed from `pip`.

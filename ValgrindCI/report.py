@@ -36,7 +36,7 @@ def report():
     args = parser.parse_args()
 
     data = ValgrindData()
-    data.load(args.input)
+    data.parse(args.input)
     # data.set_base_folder(args.source)
 
     if not os.path.exists("html"):
@@ -45,7 +45,7 @@ def report():
     shutil.copy(os.path.join(os.path.dirname(__file__), "data", "valgrind.js"), "html")
 
     env = Environment(
-        loader=PackageLoader("valgrind_report", "data"),
+        loader=PackageLoader("ValgrindCI", "data"),
         autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=True,
         lstrip_blocks=True,

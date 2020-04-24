@@ -65,7 +65,7 @@ class ValgrindData:
         self.errors = []
         self.base_folder = None
 
-    def load(self, xml_file):
+    def parse(self, xml_file):
         root = et.parse(xml_file).getroot()
         for error_tag in root.findall("error"):
             self.errors.append(Error(error_tag))
