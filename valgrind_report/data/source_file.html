@@ -27,13 +27,15 @@
     {% if item.klass == "error" %}
 </code></pre>
             <div class="issue">
-                <h3>{{ item.issue.what }}</h3>
+                <div>
+                    <span class="what">{{ item.issue.what }}</span>
+                    <div class="navigation">
+                        <button class="next_error">Next</button>
+                        <button class="prev_error">Previous</button>
+                    </div>
+                </div>
                 <div>
                     <table class="call_stack">
-                        <tr>
-                            <th><button class="next_error">Next</button>
-                                <button class="prev_error">Previous</button></th>
-                        </tr>
                         {% for frame in item.issue.stack %}
                         <tr class="stack_frame">
                             <td class="ui-corner-all ui-widget">
