@@ -36,13 +36,21 @@
                         </tr>
                         {% for frame in item.issue.stack %}
                         <tr class="stack_frame">
-                            <td>{{ frame.fileref }}<br>
-                                <code>{{ frame.function }}</code>
-                                <pre>
-                        {% for codeline in frame.code -%}
-<code class="c++">{{ codeline }}</code>
-                        {%- endfor -%}
-                        </pre>
+                            <td class="ui-corner-all ui-widget">
+                                <div class="ui-widget-header">
+                                    {{ frame.fileref }}<br>
+                                    <code class="cpp">{{ frame.function }}</code>
+                                </div>
+                                <pre><code class="c++">
+                        {%- for codeline in frame.code -%}
+<span class="line_number">{{ loop.index + frame.line }}</span>
+                        {%- if loop.index == frame.error_line -%}
+<span class="error">{{ codeline }}</span>
+                            {%- else -%}
+{{ codeline }}
+                            {%- endif %}
+                        {% endfor -%}
+</code></pre>
                             </td>
                         </tr>
                         {% endfor %}

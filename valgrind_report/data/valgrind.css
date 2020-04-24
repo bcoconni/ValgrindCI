@@ -91,15 +91,14 @@ div.issue {
 
 table.call_stack {
     border: 0;
-    border: solid red 1px;
-    border-collapse: collapse;
     font-size: 11pt;
+    border-spacing: 0.5ch;
 }
 
 table.call_stack th {
-    background-color: lightyellow;
     text-align: left;
     padding-left: 0;
+    background-color: white;
 }
 
 table.call_stack button {
@@ -108,17 +107,23 @@ table.call_stack button {
 
 table.call_stack td {
     text-align: left;
-    border: 0;
-    background-color: lightgray;
+    border: solid 1px lightgray;
+    padding: 0;
+}
+
+table.call_stack div.ui-widget-header {
+    padding: 0.5ch;
+}
+
+table.call_stack .ui-widget-header code {
+    background-color: transparent;
+    font-weight: normal;
 }
 
 table.call_stack pre {
     font-size: 9pt;
     margin: 0;
-    margin-left: 2ch;
+    padding: 1ch;
+    padding-left: 2ch;
     background-color: white;
-}
-
-table.call_stack pre code:nth-child(3) {
-    background-color: lightpink;
 }

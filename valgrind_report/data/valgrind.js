@@ -18,4 +18,5 @@ $(document).ready(
         });
         $("button.prev_error:first").hide();
         hljs.initHighlighting();
+        $("div code").each(function () { hljs.highlightBlock(this) });
     });
