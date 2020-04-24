@@ -21,6 +21,18 @@ def report():
     parser.add_argument(
         "--summary", default=False, action="store_true", help="Prints a summary"
     )
+    parser.add_argument(
+        "--lines-before",
+        default=3,
+        type=int,
+        help="Number of code lines to display before the error line.",
+    )
+    parser.add_argument(
+        "--lines-after",
+        default=3,
+        type=int,
+        help="Number of code lines to display after the error line.",
+    )
     args = parser.parse_args()
 
     data = ValgrindData()
@@ -79,15 +91,18 @@ def report():
                             stack["fileref"] = frame.func
                         else:
                             error_line = frame.line
-                            stack["line"] = error_line - 4
-                            stack["error_line"] = 4
+                            stack["line"] = error_line - args.lines_before - 1
+                            stack["error_line"] = args.lines_before + 1
                             stack["fileref"] = "{}:{}".format(
                                 frame.get_path(srcpath), error_line
                             )
                             if os.path.commonpath([srcpath, fullname]) == srcpath:
                                 with open(fullname, "r") as f:
                                     for l, code_line in enumerate(f.readlines()):
-                                        if l >= error_line - 4 and l <= error_line + 2:
+                                        if (
+                                            l >= stack["line"]
+                                            and l <= error_line + args.lines_after - 1
+                                        ):
                                             stack["code"].append(code_line)
                         issue["stack"].append(stack)
                 codelines.append({"line": line[:-1], "klass": klass, "issue": issue})
