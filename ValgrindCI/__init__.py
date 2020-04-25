@@ -55,7 +55,9 @@ def main():
     data = ValgrindData()
     data.parse(args.xml_file)
 
-    if args.abort_on_errors and data.get_num_errors() != 0:
+    errors_total = data.get_num_errors()
+    if args.abort_on_errors and errors_total != 0:
+        print("{} errors reported by Valgrind - Abort".format(errors_total))
         sys.exit(1)
 
     if args.output_dir:
@@ -64,7 +66,7 @@ def main():
         renderer.render(args.output_dir, args.lines_before, args.lines_after)
 
     if args.number_of_errors:
-        print("{} errors.".format(data.get_num_errors()))
+        print("{} errors.".format(errors_total))
 
     if args.summary:
         report = Report(data)
