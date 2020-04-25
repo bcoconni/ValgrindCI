@@ -9,6 +9,7 @@ setup(
     author="Bertrand Coconnier",
     license="GNU General Public License v3.0",
     packages=find_packages(),
+    scripts=["valgrindci"],
     package_dir={"ValgrindCI": "ValgrindCI"},
     package_data={"ValgrindCI": ["data/*.css", "data/*.html", "data/*.js"]},
     include_package_data=True,

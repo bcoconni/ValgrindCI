@@ -1,4 +1,6 @@
-# Main function of ValgrindCI.
+#! /usr/bin/python
+#
+# Main script of ValgrindCI.
 #
 # Copyright (c) 2020 Bertrand Coconnier
 #
@@ -16,7 +18,6 @@
 # this program; if not, see <http://www.gnu.org/licenses/>
 #
 
-from . import main
+from ValgrindCI import main
 
-if __name__ == "__main__":
-    main()
+main()
