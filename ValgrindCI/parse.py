@@ -69,11 +69,11 @@ class Frame:
             return "{}:{}".format(self.get_path(None), self.line)
         return self.func
 
-    def get_path(self, base_folder):
+    def get_path(self, source_dir):
         if self.folder is not None:
             filename = os.path.join(self.folder, self.filename)
-            if base_folder is not None:
-                filename = os.path.relpath(filename, base_folder)
+            if source_dir is not None:
+                filename = os.path.relpath(filename, source_dir)
             return filename
         return None
 
@@ -81,22 +81,22 @@ class Frame:
 class ValgrindData:
     def __init__(self):
         self.errors = []
-        self.base_folder = None
+        self.source_dir = None
 
     def parse(self, xml_file):
         root = et.parse(xml_file).getroot()
         for error_tag in root.findall("error"):
             self.errors.append(Error(error_tag))
 
-    def set_base_folder(self, folder):
-        self.base_folder = folder
+    def set_source_dir(self, source_dir):
+        self.source_dir = source_dir
 
     def get_num_errors(self):
         return len(self.errors)
 
     def filter_error_kind(self, kind):
         data = ValgrindData()
-        data.base_folder = self.base_folder
+        data.base_folder = self.source_dir
         for error in self.errors:
             if error.kind == kind:
                 data.errors.append(error)
@@ -104,18 +104,22 @@ class ValgrindData:
 
     def filter_source_file(self, filename):
         data = ValgrindData()
-        data.base_folder = self.base_folder
+        data.base_folder = self.source_dir
         for error in self.errors:
             f = error.find_first_source_reference()
-            if error.stack[f].get_path(self.base_folder) == filename:
+            if f is None:
+                continue
+            if error.stack[f].get_path(self.source_dir) == filename:
                 data.errors.append(error)
         return data
 
     def filter_line(self, line):
         data = ValgrindData()
-        data.base_folder = self.base_folder
+        data.base_folder = self.source_dir
         for error in self.errors:
             f = error.find_first_source_reference()
+            if f is None:
+                continue
             if error.stack[f].line == line:
                 data.errors.append(error)
         return data
@@ -131,7 +135,9 @@ class ValgrindData:
         source_files = []
         for error in self.errors:
             f = error.find_first_source_reference()
-            filename = error.stack[f].get_path(self.base_folder)
+            if f is None:
+                continue
+            filename = error.stack[f].get_path(self.source_dir)
             if filename not in source_files:
                 source_files.append(filename)
         return source_files
@@ -140,6 +146,8 @@ class ValgrindData:
         lines = []
         for error in self.errors:
             f = error.find_first_source_reference()
+            if f is None:
+                continue
             line = error.stack[f].line
             if line not in lines:
                 lines.append(line)
