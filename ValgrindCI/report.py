@@ -7,11 +7,27 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from .parse import ValgrindData
 
 
-class issue:
-    def __init__(self, filename, line, what):
-        self.filename = filename
-        self.line = line
-        self.what = what
+class Report:
+    def __init__(self, vg_data):
+        self._data = vg_data
+
+    def summary(self):
+        s = ""
+        for srcfile in sorted(self._data.list_source_files()):
+            src_data = self._data.filter_source_file(srcfile)
+            s += "{}:\n".format(srcfile)
+            s += "{} errors\n".format(src_data.get_num_errors())
+            for line in sorted(src_data.list_lines()):
+                line_data = src_data.filter_line(line)
+                s_line = "\tline {}:".format(line)
+                for error in line_data.list_error_kinds():
+                    s += "{} {}\t({} errors)\n".format(
+                        s_line,
+                        error,
+                        line_data.filter_error_kind(error).get_num_errors(),
+                    )
+                    s_line = "\t" + " " * (len(s_line) - 1)
+        return s
 
 
 def report():
