@@ -83,6 +83,7 @@ table.call_stack {
     border: 0;
     font-size: 11pt;
     border-spacing: 0.5ch;
+    background-color: transparent;
 }
 
 table.call_stack th {
@@ -122,4 +123,8 @@ div.navigation {
     float: right;
     font-size: 0.8em;
     transform: translateY(-0.25em);
+}
+
+div.issue div:last-child {
+    background-color: #f8f0ff;
 }
