@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 from .parse import ValgrindData
 from .render import HTMLRenderer
@@ -40,10 +41,19 @@ def main():
         type=int,
         help="Number of code lines to display after the error line. (default to 3)",
     )
+    parser.add_argument(
+        "--abort-on-errors",
+        default=False,
+        action="store_true",
+        help="Call exit(1) if errors have been reported by Valgrind.",
+    )
     args = parser.parse_args()
 
     data = ValgrindData()
     data.parse(args.xml_file)
+
+    if args.abort_on_errors and data.get_num_errors() != 0:
+        sys.exit(1)
 
     if args.output_dir:
         renderer = HTMLRenderer(data)
