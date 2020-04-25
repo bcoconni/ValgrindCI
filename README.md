@@ -66,7 +66,7 @@ src/models/FGMassBalance.cpp:
 ```
 Since a function can be called from different places, a single line of code can be reported several times as an offending line by valgrind. In the example above, the line 207 of the file `src/models/FGMassBalance.cpp` is reported 11 times, each time with a different call stack. Clearly, the added value of ValgrindCI in such a case is to group errors by source files and by line numbers. By this simple process, and for the particular case illustrated above, the number of errors has been narrowed down from 2147 to 185 !
 ### HTML report
-ValgrindCI can generate an HTML report that displays the errors reported by Valgrind inside your code. The command below generates an HTML report in the directory `html`. The argument `--source-dir` must point to the source code of your application.
+ValgrindCI can generate an HTML report that displays the errors reported by Valgrind inside your code. The command below generates an HTML report in the directory `html`. The argument `--source-dir` is used to build paths relative to that directory rather than absolute paths.
 ```bash
 > valgrindci /path/to/output_file.xml --source-dir=/path/to/source/code --output-dir=html
 ```
@@ -89,8 +89,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   --source-dir SOURCE_DIR
-                        specifies the source directory (default to working
-                        directory)
+                        specifies the source directory
   --output-dir OUTPUT_DIR
                         directory where the HTML report will be generated
   --summary             print a summary of errors

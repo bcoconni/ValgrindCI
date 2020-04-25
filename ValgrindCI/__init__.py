@@ -13,9 +13,7 @@ def main():
     parser.add_argument("--version", action="version", version=__version__)
     parser.add_argument("xml_file", help="Valgrind XML file name")
     parser.add_argument(
-        "--source-dir",
-        default=".",
-        help="specifies the source directory (default to working directory)",
+        "--source-dir", help="specifies the source directory",
     )
     parser.add_argument(
         "--output-dir", help="directory where the HTML report will be generated"
@@ -54,6 +52,7 @@ def main():
 
     data = ValgrindData()
     data.parse(args.xml_file)
+    data.set_source_dir(args.source_dir)
 
     errors_total = data.get_num_errors()
     if args.abort_on_errors and errors_total != 0:

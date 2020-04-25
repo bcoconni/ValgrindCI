@@ -38,7 +38,10 @@ class HTMLRenderer:
         self._source_dir = None
 
     def set_source_dir(self, source_dir):
-        self._source_dir = source_dir
+        if source_dir is not None:
+            self._source_dir = os.path.abspath(source_dir)
+        else:
+            self._source_dir = None
 
     def render(self, output_dir, lines_before, lines_after):
         if not os.path.exists(output_dir):
@@ -61,20 +64,19 @@ class HTMLRenderer:
             except FileNotFoundError:
                 continue
 
-            filename = os.path.relpath(source_file, self._source_dir)
             html_filename = self._unique_html_filename(source_file)
 
             with open(os.path.join(output_dir, html_filename), "w") as f:
                 f.write(
                     self._source_tmpl.render(
                         num_errors=num_errors,
-                        source_file_name=filename,
+                        source_file_name=source_file,
                         codelines=lines_of_code,
                     )
                 )
 
             summary.append(
-                {"filename": filename, "errors": num_errors, "link": html_filename,}
+                {"filename": source_file, "errors": num_errors, "link": html_filename,}
             )
             total_num_errors += num_errors
 
@@ -86,14 +88,15 @@ class HTMLRenderer:
             )
 
     def _unique_html_filename(self, source_file):
+        # TODO: Make sure that there are no clashes between 2 files with the same
+        # name and located in different directories.
         name = os.path.splitext(os.path.basename(source_file))
         return name[0] + "_" + name[1][1:] + ".html"
 
     def _extract_error_data(self, source_data, line_number, lines_before, lines_after):
         current_error = source_data.filter_line(line_number).errors[0]
         issue = {"stack": [], "what": current_error.what}
-        initial_frame = current_error.find_first_source_reference()
-        source_dir = os.path.abspath(self._source_dir)
+        initial_frame = current_error.find_first_source_reference(self._source_dir)
         for frame in current_error.stack[initial_frame + 1 :]:
             stack = {}
             fullname = frame.get_path(None)
@@ -108,11 +111,10 @@ class HTMLRenderer:
                 stack["fileref"] = "{}:{}".format(
                     frame.get_path(self._source_dir), error_line
                 )
-                if os.path.commonpath([source_dir, fullname]) == source_dir:
-                    with open(fullname, "r") as f:
-                        for l, code_line in enumerate(f.readlines()):
-                            if l >= stack["line"] and l <= error_line + lines_after - 1:
-                                stack["code"].append(code_line)
+                with open(fullname, "r") as f:
+                    for l, code_line in enumerate(f.readlines()):
+                        if l >= stack["line"] and l <= error_line + lines_after - 1:
+                            stack["code"].append(code_line)
             issue["stack"].append(stack)
         return issue
 
@@ -121,7 +123,12 @@ class HTMLRenderer:
         error_lines = sorted(src_data.list_lines())
         lines_of_code = []
 
-        with open(source_file, "r") as f:
+        if self._source_dir is not None:
+            filename = os.path.join(self._source_dir, source_file)
+        else:
+            filename = source_file
+
+        with open(filename, "r") as f:
             for l, line in enumerate(f.readlines()):
                 klass = None
                 issue = None
