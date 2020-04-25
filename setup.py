@@ -1,9 +1,11 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
+
+from ValgrindCI import __version__
 
 setup(
     name="ValgrindCI",
-    version="0.0.1",
-    description="Tools to integrate valgrind in your Continuous Integration.",
+    version=__version__,
+    description="Tools to integrate valgrind into your Continuous Integration.",
     author="Bertrand Coconnier",
     license="GNU General Public License v3.0",
     packages=find_packages(),
