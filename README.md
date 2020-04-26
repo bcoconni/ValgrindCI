@@ -1,6 +1,6 @@
 # Continuous Integration with Valgrind
 
-ValgrindCI is a Python package that provides tools to facilitate the integration of [valgrind](https://valgrind.org/) into your Continuous Integration process.
+ValgrindCI is a Python package that provides tools to facilitate the integration of [valgrind](https://valgrind.org/) into your Continuous Integration workflow.
 
 Valgrind can sometimes generate an overwhelming amount of findings and it can be difficult to extract the information you need from these data. ValgrindCI most basic feature is to terminate a job if the findings from valgrind meet some criteria defined by the user, for example, as soon as valgrind reports a single error. ValgrindCI can also help you get a better insight into the errors reported by valgrind:
 
@@ -72,7 +72,7 @@ ValgrindCI can generate an HTML report that displays the errors reported by Valg
 ```
 If you open the document `html/index.html` you can review the report with your web browser, errors with their corresponding call stack are displayed within the source code.
 
-![View of HTML report](media/HTMLreport.png)
+![View of HTML report](https://github.com/bcoconni/ValgrindCI/raw/master/media/HTMLreport.png)
 ### Other options
 ValgrindCI command line tool has a number of arguments than can be used to adapt the tool to your specific need:
 ```
@@ -133,3 +133,6 @@ from ValgrindCI.report import Report
 report = Report(data)
 print(report.summary())
 ```
+ ## Releases
+
+- `v0.1.0`: Initial Release
