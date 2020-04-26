@@ -20,36 +20,36 @@ If you are building ValgrindCI from source, these dependencies must be installed
 ValgrindCI uses the `setuptools` to build its package which can then be installed by `pip`
 ```bash
 > python setup.py bdist_wheel
-> pip install valgrindci --no-index -f dist/valgrindci*.whl
+> pip install ValgrindCI --no-index -f dist
 ```
 ### Download and install with `pip`
 ValgrindCI is a tool written in Python and can be installed from `pip`.
 ```bash
-> pip install valgrindci
+> pip install ValgrindCI
 ```
 
 ## How to use
-ValgrindCI is a command tool designed to be executed within a job of your favorite Continuous Integration platform. It parses the XML output of valgrind to provide its features.
+ValgrindCI is a command tool designed to be executed within jobs of your favorite Continuous Integration platform. It parses the XML output of valgrind to provide its services.
 
-First, valgrind must be run with the options `--xml=yes` and `--xml-file` in order to report its findings in an XML file.
+First, Valgrind must be run with the options `--xml=yes` and `--xml-file` in order to report its findings in an XML file.
 ```bash
 > valgrind --tool=memcheck --xml=yes --xml-file==/path/to/output_file.xml my_executable --options-of-my-executable
 ```
 ### Get basic information
 Now, ValgrindCI can be invoked to parse the XML output file and report the total number of errors found by valgrind.
 ```bash
-> valgrindci /path/to/output_file.xml --number-of-errors
+> valgrind-ci /path/to/output_file.xml --number-of-errors
 ```
 ### Abort on errors
 Most CI platforms detect a job failure when the system command `exit()` is called with a non zero value. This feature allows ValgrindCI to report a failure as soon as valgrind reports an error:
 ```bash
-> valgrindci /path/to/output_file.xml --abort-on-errors
+> valgrind-ci /path/to/output_file.xml --abort-on-errors
 ```
 
 ### Summary report of errors
 You can request ValgrindCI to print a summary report of the errors found by valgrind.
 ```bash
-> valgrindci /path/to/output_file.xml --summary
+> valgrind-ci /path/to/output_file.xml --summary
 ```
 An example of the output is given below:
 ```
@@ -68,7 +68,7 @@ Since a function can be called from different places, a single line of code can 
 ### HTML report
 ValgrindCI can generate an HTML report that displays the errors reported by Valgrind inside your code. The command below generates an HTML report in the directory `html`. The argument `--source-dir` is used to build paths relative to that directory rather than absolute paths.
 ```bash
-> valgrindci /path/to/output_file.xml --source-dir=/path/to/source/code --output-dir=html
+> valgrind-ci /path/to/output_file.xml --source-dir=/path/to/source/code --output-dir=html
 ```
 If you open the document `html/index.html` you can review the report with your web browser, errors with their corresponding call stack are displayed within the source code.
 
@@ -76,11 +76,11 @@ If you open the document `html/index.html` you can review the report with your w
 ### Other options
 ValgrindCI command line tool has a number of arguments than can be used to adapt the tool to your specific need:
 ```
-usage: valgrindci [-h] [--version] [--source-dir SOURCE_DIR]
-                  [--output-dir OUTPUT_DIR] [--summary] [--number-of-errors]
-                  [--lines-before LINES_BEFORE] [--lines-after LINES_AFTER]
-                  [--abort-on-errors]
-                  xml_file
+usage: valgrind-ci [-h] [--version] [--source-dir SOURCE_DIR]
+                   [--output-dir OUTPUT_DIR] [--summary] [--number-of-errors]
+                   [--lines-before LINES_BEFORE] [--lines-after LINES_AFTER]
+                   [--abort-on-errors]
+                   xml_file
 
 positional arguments:
   xml_file              Valgrind XML file name
