@@ -26,8 +26,14 @@ class Error:
         self.what = tag.find("what").text
         self.kind = tag.find("kind").text
         self.unique = int(tag.find("unique").text, 16)
-        for frame in tag.findall("stack/frame"):
+        for frame in tag.find("stack").findall("frame"):
             self.stack.append(Frame(frame))
+        self.auxstack = []
+        auxwhat = tag.find("auxwhat")
+        if auxwhat is not None:
+            self.auxwhat = auxwhat.text
+            for frame in tag.find("./stack[2]").findall("frame"):
+                self.auxstack.append(Frame(frame))
 
     def __str__(self):
         s = f"{self.what} (0x{self.unique:x})"
