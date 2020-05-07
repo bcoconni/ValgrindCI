@@ -29,16 +29,20 @@ class Error:
         for frame in tag.find("stack").findall("frame"):
             self.stack.append(Frame(frame))
         self.auxstack = []
-        auxwhat = tag.find("auxwhat")
-        if auxwhat is not None:
-            self.auxwhat = auxwhat.text
+        self.auxwhat = tag.find("auxwhat")
+        if self.auxwhat is not None:
+            self.auxwhat = self.auxwhat.text
             for frame in tag.find("./stack[2]").findall("frame"):
                 self.auxstack.append(Frame(frame))
 
     def __str__(self):
         s = f"{self.what} (0x{self.unique:x})"
         for i, frame in enumerate(self.stack):
-            s += "\n#{} => {}".format(i, frame)
+            s += f"\n#{i} => {frame}"
+        if self.auxwhat is not None:
+            s += f"\n\nAuxilliary:\n{self.auxwhat}"
+            for i, frame in enumerate(self.auxstack):
+                s += f"\n#{i} => {frame}"
         return s
 
     def find_first_source_reference(self, source_dir):
