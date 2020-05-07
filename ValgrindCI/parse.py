@@ -146,6 +146,18 @@ class ValgrindData:
                 data.errors.append(error)
         return data
 
+    def filter_function(self, function):
+        data = ValgrindData()
+        data._source_dir = self._source_dir
+        for error in self.errors:
+            f = error.find_first_source_reference(self._source_dir)
+            if f is None:
+                f = 0
+
+            if error.stack[f].func == function:
+                data.errors.append(error)
+        return data
+
     def list_error_kinds(self):
         error_kinds = []
         for error in self.errors:
@@ -174,3 +186,15 @@ class ValgrindData:
             if line not in lines:
                 lines.append(line)
         return lines
+
+    def list_functions(self):
+        functions = []
+        for error in self.errors:
+            f = error.find_first_source_reference(self._source_dir)
+            if f is None:
+                f = 0
+
+            func = error.stack[f].func
+            if func not in functions:
+                functions.append(func)
+        return functions
