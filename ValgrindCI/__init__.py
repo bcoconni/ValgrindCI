@@ -5,7 +5,7 @@ from .parse import ValgrindData
 from .render import HTMLRenderer
 from .report import Report
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 def main():
