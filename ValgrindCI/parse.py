@@ -23,7 +23,16 @@ import defusedxml.ElementTree as et
 class Error:
     def __init__(self, tag):
         self.stack = []
-        self.what = tag.find("what").text
+        # bugfix-issue#1: valgrind 3.15.0 does not generate
+        # [what] xml tag, [xwhat] is generated instead
+        self.what = tag.find("what")
+        if self.what is None:
+            self.what = tag.find("xwhat")
+        if self.what is None:
+            raise ValueError("looks like valgrind xml file format changed, "
+                             "please report this issue "
+                             "on the ValgrindCI github page.")
+        self.what = self.what.text
         self.kind = tag.find("kind").text
         self.unique = int(tag.find("unique").text, 16)
         for frame in tag.find("stack").findall("frame"):
