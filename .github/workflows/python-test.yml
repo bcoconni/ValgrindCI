@@ -32,4 +32,4 @@ jobs:
         make
         ./test_basic
         valgrind --tool=memcheck --xml=yes --xml-file=test.xml ./test_basic
-        ctest
+        ctest --output-on-failure
