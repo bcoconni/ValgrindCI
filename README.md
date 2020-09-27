@@ -11,7 +11,13 @@ Valgrind can sometimes generate an overwhelming amount of findings and it can be
 - ValgrindCI can generate an HTML report to investigate the errors directly within your code.
 
 ## Installation
+### Download and install with `pip`
+ValgrindCI is a tool written in Python and can be installed from `pip`. This is the prefered method to install ValgrindCI.
+```bash
+> pip install ValgrindCI
+```
 ### Install from the sources
+Alternatively, ValgrindCI can be built and installed from the source files.
 #### Pre-requisites
 ValgrindCI uses the Python packages [`defusedxml`](https://github.com/tiran/defusedxml) and [`jinja2`](https://palletsprojects.com/p/jinja/).
 If you are building ValgrindCI from source, these dependencies must be installed with `pip` in the first place.
@@ -23,11 +29,6 @@ ValgrindCI uses the `setuptools` to build its package which can then be installe
 ```bash
 > python setup.py bdist_wheel
 > pip install ValgrindCI --no-index -f dist
-```
-### Download and install with `pip`
-ValgrindCI is a tool written in Python and can be installed from `pip`.
-```bash
-> pip install ValgrindCI
 ```
 
 ## How to use
