@@ -17,6 +17,12 @@ class TestValgrindCI(unittest.TestCase):
             data.list_error_kinds(), ["UninitCondition", "Leak_DefinitelyLost"]
         )
 
+    def test_source_files(self):
+        data = ValgrindData()
+        data.parse("test.xml")
+        data.set_source_dir("${CMAKE_SOURCE_DIR}")
+        self.assertEqual(data.list_source_files(), ["test.c"])
+
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestValgrindCI)
 test_result = unittest.TextTestRunner(verbosity=2).run(suite)
