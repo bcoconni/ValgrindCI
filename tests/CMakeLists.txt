@@ -1,2 +1,6 @@
+cmake_minimum_required(VERSION 3.0)
 project(test_valgrind_ci)
-add_executable(test test.c)
+find_package(PythonInterp)
+enable_testing()
+add_test(NAME test_basic COMMAND ${PYTHON_EXECUTABLE} -B ${CMAKE_CURRENT_SOURCE_DIR}/test.py)
+add_executable(test_basic test.c)
