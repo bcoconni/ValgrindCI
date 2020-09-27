@@ -25,16 +25,19 @@ class Error:
         self.stack = []
         # bugfix-issue#1: valgrind 3.15.0 does not generate
         # [what] xml tag, [xwhat] is generated instead
-        self.what = tag.find("what")
-        if self.what is None:
-            self.what = tag.find("xwhat")
-        if self.what is None:
-            raise ValueError(
-                "looks like valgrind xml file format changed, "
-                "please report this issue "
-                "on the ValgrindCI github page."
-            )
-        self.what = self.what.text
+        what_tag = tag.find("what")
+        if what_tag is not None:
+            self.what = what_tag.text
+        else:
+            what_tag = tag.find("xwhat/text")
+            if what_tag is None:
+                raise ValueError(
+                    "Cannot find either <what> or <xwhat> tags, "
+                    "please report this issue "
+                    "on the ValgrindCI github page."
+                )
+            else:
+                self.what = what_tag.text
         self.kind = tag.find("kind").text
         self.unique = int(tag.find("unique").text, 16)
         for frame in tag.find("stack").findall("frame"):
@@ -125,6 +128,9 @@ class ValgrindData:
             return len(self.errors)
 
         num_errors = 0
+        if self._source_dir is None:
+            return len(self.errors)
+
         for error in self.errors:
             if error.find_first_source_reference(self._source_dir) is not None:
                 num_errors += 1
