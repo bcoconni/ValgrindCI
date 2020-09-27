@@ -28,7 +28,7 @@ jobs:
     - name: Test
       working-directory: build
       run: |
-        cmake ../tests
+        cmake -DCMAKE_C_FLAGS_DEBUG="-g -Wall" -DCMAKE_BUILD_TYPE=Debug ../tests
         make
         valgrind --tool=memcheck --xml=yes --xml-file=test.xml ./test_basic
         ctest --output-on-failure
