@@ -1,3 +1,5 @@
+![CI/CD](https://github.com/bcoconni/ValgrindCI/workflows/Test%20&%20Deploy%20Python%20Package/badge.svg)
+
 # Continuous Integration with Valgrind
 
 ValgrindCI is a Python package that provides tools to facilitate the integration of [valgrind](https://valgrind.org/) into your Continuous Integration workflow.
@@ -135,4 +137,7 @@ print(report.summary())
 ```
  ## Releases
 
+- `v0.1.1`: Bug fixes
+  - Fixed issue #1 (the tag `<xwhat>` used for leak errors was not recognized).
+  - Fixed an issue where the incorrect number of errors was reported when the optional argument `--source-dir` was not specified.
 - `v0.1.0`: Initial Release
