@@ -135,4 +135,7 @@ print(report.summary())
 ```
  ## Releases
 
+- `v0.1.1`: Bug fixes
+  - Fixed issue #1 (the tag `<xwhat>` used for leak errors was not recognized).
+  - Fixed an issue where the incorrect number of errors was reported when the optional argument `--source-dir` was not specified.
 - `v0.1.0`: Initial Release
