@@ -3,3 +3,4 @@ html
 *.egg-info
 dist
 build
+.vscode
