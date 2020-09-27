@@ -26,9 +26,8 @@ jobs:
         python setup.py bdist_wheel
         pip install ValgrindCI --no-index -f dist/ValgrindCI*.whl
     - name: Test
+      working-directory: build
       run: |
-        mkdir build
-        cd build
         cmake ../tests
         make
         ./test_basic
