@@ -29,9 +29,11 @@ class Error:
         if self.what is None:
             self.what = tag.find("xwhat")
         if self.what is None:
-            raise ValueError("looks like valgrind xml file format changed, "
-                             "please report this issue "
-                             "on the ValgrindCI github page.")
+            raise ValueError(
+                "looks like valgrind xml file format changed, "
+                "please report this issue "
+                "on the ValgrindCI github page."
+            )
         self.what = self.what.text
         self.kind = tag.find("kind").text
         self.unique = int(tag.find("unique").text, 16)
@@ -109,6 +111,9 @@ class ValgrindData:
             self._source_dir = None
 
     def get_num_errors(self):
+        if self._source_dir is None:
+            return len(self.errors)
+
         num_errors = 0
         for error in self.errors:
             if error.find_first_source_reference(self._source_dir) is not None:
