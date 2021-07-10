@@ -1,4 +1,6 @@
 ![CI/CD](https://github.com/bcoconni/ValgrindCI/workflows/Test%20&%20Deploy%20Python%20Package/badge.svg)
+[![PyPI](https://img.shields.io/pypi/v/valgrindci)](https://pypi.org/project/ValgrindCI)
+[![Downloads](https://pepy.tech/badge/valgrindci)](https://pepy.tech/project/valgrindci)
 
 # Continuous Integration with Valgrind
 
