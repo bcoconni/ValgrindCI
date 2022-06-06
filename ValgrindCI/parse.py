@@ -62,7 +62,7 @@ class Error:
     def find_first_source_reference(self, source_dir):
         for i, frame in enumerate(self.stack):
             filename = frame.get_path(None)
-            if filename is not None:
+            if filename is not None and os.path.isabs(filename):
                 if (
                     source_dir is None
                     or os.path.commonpath([source_dir, filename]) == source_dir
