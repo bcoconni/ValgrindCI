@@ -41,13 +41,15 @@ class Error:
         self.kind = tag.find("kind").text
         self.unique = int(tag.find("unique").text, 16)
         for frame in tag.find("stack").findall("frame"):
-            self.stack.append(Frame(frame))
+            if frame.find("obj") is not None:
+                self.stack.append(Frame(frame))
         self.auxstack = []
         self.auxwhat = tag.find("auxwhat")
         if self.auxwhat is not None:
             self.auxwhat = self.auxwhat.text
             for frame in tag.find("./stack[2]").findall("frame"):
-                self.auxstack.append(Frame(frame))
+                if frame.find("obj") is not None:
+                    self.auxstack.append(Frame(frame))
 
     def __str__(self):
         s = f"{self.what} (0x{self.unique:x})"
