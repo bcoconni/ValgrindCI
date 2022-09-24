@@ -5,7 +5,7 @@ from .parse import ValgrindData
 from .render import HTMLRenderer
 from .report import Report
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 def main():
@@ -13,7 +13,8 @@ def main():
     parser.add_argument("--version", action="version", version=__version__)
     parser.add_argument("xml_file", help="Valgrind XML file name")
     parser.add_argument(
-        "--source-dir", help="specifies the source directory",
+        "--source-dir",
+        help="specifies the source directory",
     )
     parser.add_argument(
         "--output-dir", help="directory where the HTML report will be generated"
