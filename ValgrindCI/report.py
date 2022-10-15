@@ -1,6 +1,6 @@
 # Classes to print summary reports of errors reported by Valgrind.
 #
-# Copyright (c) 2020 Bertrand Coconnier
+# Copyright (c) 2020-2022 Bertrand Coconnier
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -16,20 +16,14 @@
 # this program; if not, see <http://www.gnu.org/licenses/>
 #
 
-import argparse
-import os.path
-import shutil
-
-from jinja2 import Environment, PackageLoader, select_autoescape
-
 from .parse import ValgrindData
 
 
 class Report:
-    def __init__(self, vg_data):
+    def __init__(self, vg_data: ValgrindData) -> None:
         self._data = vg_data
 
-    def summary(self):
+    def summary(self) -> str:
         s = ""
         for srcfile in sorted(self._data.list_source_files()):
             src_data = self._data.filter_source_file(srcfile)
