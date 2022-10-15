@@ -143,7 +143,7 @@ class ValgrindData:
                 num_errors += 1
         return num_errors
 
-    def filter_error_kind(self, kind: str) -> ValgrindData:
+    def filter_error_kind(self, kind: str):
         data: ValgrindData = ValgrindData()
         data._source_dir = self._source_dir
         for error in self.errors:
@@ -151,7 +151,7 @@ class ValgrindData:
                 data.errors.append(error)
         return data
 
-    def filter_source_file(self, filename: str) -> ValgrindData:
+    def filter_source_file(self, filename: str):
         data = ValgrindData()
         data._source_dir = self._source_dir
         for error in self.errors:
@@ -162,7 +162,7 @@ class ValgrindData:
                 data.errors.append(error)
         return data
 
-    def filter_line(self, line: int) -> ValgrindData:
+    def filter_line(self, line: int):
         data = ValgrindData()
         data._source_dir = self._source_dir
         for error in self.errors:
@@ -173,7 +173,7 @@ class ValgrindData:
                 data.errors.append(error)
         return data
 
-    def filter_function(self, function: str) -> ValgrindData:
+    def filter_function(self, function: str):
         data = ValgrindData()
         data._source_dir = self._source_dir
         for error in self.errors:
