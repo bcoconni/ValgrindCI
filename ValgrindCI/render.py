@@ -1,6 +1,6 @@
 # Classes to render Valgrind errors in an HTML report.
 #
-# Copyright (c) 2020 Bertrand Coconnier
+# Copyright (c) 2020-2022 Bertrand Coconnier
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -16,8 +16,9 @@
 # this program; if not, see <http://www.gnu.org/licenses/>
 #
 
-import os.path
+import os
 import shutil
+from typing import Any, Dict, List, Optional, Tuple
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
@@ -25,7 +26,7 @@ from .parse import ValgrindData
 
 
 class HTMLRenderer:
-    def __init__(self, vg_data):
+    def __init__(self, vg_data: ValgrindData) -> None:
         self._data = vg_data
         env = Environment(
             loader=PackageLoader("ValgrindCI", "data"),
@@ -35,15 +36,15 @@ class HTMLRenderer:
         )
         self._source_tmpl = env.get_template("source_file.html")
         self._index_tmpl = env.get_template("index.html")
-        self._source_dir = None
+        self._source_dir: Optional[str] = None
 
-    def set_source_dir(self, source_dir):
+    def set_source_dir(self, source_dir: Optional[str]) -> None:
         if source_dir is not None:
             self._source_dir = os.path.abspath(source_dir)
         else:
             self._source_dir = None
 
-    def render(self, output_dir, lines_before, lines_after):
+    def render(self, output_dir: str, lines_before: int, lines_after: int) -> None:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         shutil.copy(
@@ -76,7 +77,11 @@ class HTMLRenderer:
                 )
 
             summary.append(
-                {"filename": source_file, "errors": num_errors, "link": html_filename,}
+                {
+                    "filename": source_file,
+                    "errors": num_errors,
+                    "link": html_filename,
+                }
             )
             total_num_errors += num_errors
 
@@ -87,18 +92,25 @@ class HTMLRenderer:
                 )
             )
 
-    def _unique_html_filename(self, source_file):
+    def _unique_html_filename(self, source_file: str) -> str:
         # TODO: Make sure that there are no clashes between 2 files with the same
         # name and located in different directories.
         name = os.path.splitext(os.path.basename(source_file))
         return name[0] + "_" + name[1][1:] + ".html"
 
-    def _extract_error_data(self, source_data, line_number, lines_before, lines_after):
+    def _extract_error_data(
+        self,
+        source_data: ValgrindData,
+        line_number: int,
+        lines_before: int,
+        lines_after: int,
+    ) -> Dict[str, Any]:
         current_error = source_data.filter_line(line_number).errors[0]
-        issue = {"stack": [], "what": current_error.what}
+        issue: Dict[str, Any] = {"stack": [], "what": current_error.what}
         initial_frame = current_error.find_first_source_reference(self._source_dir)
+        assert initial_frame is not None
         for frame in current_error.stack[initial_frame + 1 :]:
-            stack = {}
+            stack: Dict[str, Any] = {}
             fullname = frame.get_path(None)
             stack["code"] = []
             stack["function"] = frame.func
@@ -106,6 +118,7 @@ class HTMLRenderer:
                 stack["fileref"] = frame.func
             else:
                 error_line = frame.line
+                assert error_line is not None
                 stack["line"] = error_line - lines_before - 1
                 stack["error_line"] = lines_before + 1
                 stack["fileref"] = "{}:{}".format(
@@ -118,7 +131,9 @@ class HTMLRenderer:
             issue["stack"].append(stack)
         return issue
 
-    def _extract_data_per_source_file(self, source_file, lines_before, lines_after):
+    def _extract_data_per_source_file(
+        self, source_file: str, lines_before: int, lines_after: int
+    ) -> Tuple[List[Dict[str, Any]], int]:
         src_data = self._data.filter_source_file(source_file)
         error_lines = sorted(src_data.list_lines())
         lines_of_code = []
