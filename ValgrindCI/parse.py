@@ -45,9 +45,10 @@ class Error:
                 self.stack.append(Frame(frame))
         self.auxstack = []
         self.auxwhat = tag.find("auxwhat")
-        if self.auxwhat is not None:
+        stack_2 = tag.find("./stack[2]")
+        if self.auxwhat is not None and stack_2 is not None:
             self.auxwhat = self.auxwhat.text
-            for frame in tag.find("./stack[2]").findall("frame"):
+            for frame in stack_2.findall("frame"):
                 if frame.find("obj") is not None:
                     self.auxstack.append(Frame(frame))
 
