@@ -4,3 +4,4 @@ html
 dist
 build
 .vscode
+py.typed

@@ -1,0 +1,4 @@
+recursive-include ValgrindCI/data *.css
+recursive-include ValgrindCI/data *.html
+recursive-include ValgrindCI/data *.js
+include ValgrindCI/py.typed

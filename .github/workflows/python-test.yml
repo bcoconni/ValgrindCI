@@ -29,6 +29,7 @@ jobs:
         run: mypy --ignore-missing-imports ValgrindCI/*.py
       - name: Build and Install
         run: |
+          touch ValgrindCI/py.typed
           python setup.py bdist_wheel
           pip install ValgrindCI --no-index -f dist/ValgrindCI*.whl
       - name: Test
@@ -60,5 +61,6 @@ jobs:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
+          touch ValgrindCI/py.typed
           python setup.py sdist bdist_wheel
           twine upload dist/*
