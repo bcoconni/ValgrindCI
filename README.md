@@ -184,6 +184,9 @@ print(report.summary())
 
 ## Releases
 
+- `v0.3.0` : New Release
+  - Fixed issue #17 (checking that a second occurrence of `<stack>` exists)
+  - Added type hints for ValgrindCI so that tools like `mypy` can check your types.
 - `v0.2.0` : New Release
   - Added the management of the `<auxwhat>` tags.
   - Added the ability to filter by functions in addition to filtering by files
