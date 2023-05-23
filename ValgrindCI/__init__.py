@@ -38,6 +38,11 @@ def main():
         "--output-dir", help="directory where the HTML report will be generated"
     )
     parser.add_argument(
+        "--html-report-title",
+        default="ValgrindCI Report",
+        help="the title of the generated HTML report"
+    )
+    parser.add_argument(
         "--summary",
         default=False,
         action="store_true",
@@ -102,7 +107,7 @@ def main():
     if args.output_dir:
         renderer = HTMLRenderer(data)
         renderer.set_source_dir(args.source_dir)
-        renderer.render(args.output_dir, args.lines_before, args.lines_after)
+        renderer.render(args.html_report_title, args.output_dir, args.lines_before, args.lines_after)
 
     if args.number_of_errors:
         print("{} errors.".format(errors_total))

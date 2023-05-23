@@ -44,7 +44,7 @@ class HTMLRenderer:
         else:
             self._source_dir = None
 
-    def render(self, output_dir: str, lines_before: int, lines_after: int) -> None:
+    def render(self, report_title: str, output_dir: str, lines_before: int, lines_after: int) -> None:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         shutil.copy(
@@ -88,7 +88,9 @@ class HTMLRenderer:
         with open(os.path.join(output_dir, "index.html"), "w") as f:
             f.write(
                 self._index_tmpl.render(
-                    source_list=summary, num_errors=total_num_errors
+                    title=report_title,
+                    source_list=summary,
+                    num_errors=total_num_errors
                 )
             )
 
