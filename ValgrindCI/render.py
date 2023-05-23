@@ -124,10 +124,14 @@ class HTMLRenderer:
                 stack["fileref"] = "{}:{}".format(
                     frame.get_path(self._source_dir), error_line
                 )
-                with open(fullname, "r") as f:
-                    for l, code_line in enumerate(f.readlines()):
-                        if l >= stack["line"] and l <= error_line + lines_after - 1:
-                            stack["code"].append(code_line)
+                fullname = self._data.substitute_path(fullname)
+                try:
+                    with open(fullname, "r", errors="replace") as f:
+                        for l, code_line in enumerate(f.readlines()):
+                            if l >= stack["line"] and l <= error_line + lines_after - 1:
+                                stack["code"].append(code_line)
+                except OSError as e:
+                    print(f"Warning: cannot read stack data from missing source file: {e.filename}")
             issue["stack"].append(stack)
         return issue
 
@@ -143,16 +147,20 @@ class HTMLRenderer:
         else:
             filename = source_file
 
-        with open(filename, "r") as f:
-            for l, line in enumerate(f.readlines()):
-                klass = None
-                issue = None
-                if l + 1 in error_lines:
-                    klass = "error"
-                    issue = self._extract_error_data(
-                        src_data, l + 1, lines_before, lines_after
+        filename = self._data.substitute_path(filename)
+        try:
+            with open(filename, "r", errors="replace") as f:
+                for l, line in enumerate(f.readlines()):
+                    klass = None
+                    issue = None
+                    if l + 1 in error_lines:
+                        klass = "error"
+                        issue = self._extract_error_data(
+                            src_data, l + 1, lines_before, lines_after
+                        )
+                    lines_of_code.append(
+                        {"line": line[:-1], "klass": klass, "issue": issue}
                     )
-                lines_of_code.append(
-                    {"line": line[:-1], "klass": klass, "issue": issue}
-                )
+        except OSError as e:
+            print(f"Warning: cannot extract data from missing source file: {e.filename}")
         return lines_of_code, len(error_lines)

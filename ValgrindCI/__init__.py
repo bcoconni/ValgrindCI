@@ -17,6 +17,12 @@ def main():
         help="specifies the source directory",
     )
     parser.add_argument(
+        "--substitute-path",
+        action="append",
+        help="specifies a substitution rule `from:to` for finding source files on disk. example: --substitute-path /foo:/bar",
+        nargs='?'
+    )
+    parser.add_argument(
         "--output-dir", help="directory where the HTML report will be generated"
     )
     parser.add_argument(
@@ -54,6 +60,12 @@ def main():
     data = ValgrindData()
     data.parse(args.xml_file)
     data.set_source_dir(args.source_dir)
+
+    if args.substitute_path:
+        substitute_paths = []
+        for s in args.substitute_path:
+            substitute_paths.append({"from": s.split(":")[0], "to": s.split(":")[1] })
+        data.set_substitute_paths(substitute_paths)
 
     errors_total = data.get_num_errors()
     if args.abort_on_errors and errors_total != 0:
