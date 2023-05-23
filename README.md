@@ -44,6 +44,16 @@ ValgrindCI uses the `setuptools` to build its package which can then be installe
 > pip install ValgrindCI --no-index -f dist
 ```
 
+#### Build and package an executable with `pyinstaller`
+
+You can use `pyinstaller` to create a single-file executable binary:
+
+```bash
+> pip install pyinstaller
+> pyinstaller --onefile --add-data ValgrindCI:ValgrindCI valgrind-ci
+> ./dist/valgrind-ci --help
+```
+
 ## How to use
 
 ValgrindCI is a command tool designed to be executed within jobs of your favorite Continuous Integration platform. It parses the XML output of valgrind to provide its services.
