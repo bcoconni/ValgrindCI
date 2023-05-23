@@ -71,14 +71,14 @@ class HTMLRenderer:
                 f.write(
                     self._source_tmpl.render(
                         num_errors=num_errors,
-                        source_file_name=source_file,
+                        source_file_name=self._data.relativize(source_file),
                         codelines=lines_of_code,
                     )
                 )
 
             summary.append(
                 {
-                    "filename": source_file,
+                    "filename": self._data.relativize(source_file),
                     "errors": num_errors,
                     "link": html_filename,
                 }
@@ -121,9 +121,9 @@ class HTMLRenderer:
                 assert error_line is not None
                 stack["line"] = error_line - lines_before - 1
                 stack["error_line"] = lines_before + 1
-                stack["fileref"] = "{}:{}".format(
-                    frame.get_path(self._source_dir), error_line
-                )
+                frame_source = frame.get_path(self._source_dir)
+                frame_source = self._data.relativize(frame_source)
+                stack["fileref"] = "{}:{}".format(frame_source, error_line)
                 fullname = self._data.substitute_path(fullname)
                 try:
                     with open(fullname, "r", errors="replace") as f:
