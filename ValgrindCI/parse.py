@@ -118,6 +118,8 @@ class ValgrindData:
     def __init__(self) -> None:
         self.errors: List[Error] = []
         self._source_dir: Optional[str] = None
+        self._substitute_paths: Optional[List[dict]] = []
+        self._relative_prefixes: Optional[List[str]] = []
 
     def parse(self, xml_file: str) -> None:
         root = et.parse(xml_file).getroot()
@@ -129,6 +131,27 @@ class ValgrindData:
             self._source_dir = os.path.abspath(source_dir)
         else:
             self._source_dir = None
+
+    def set_substitute_paths(self, substitute_paths: Optional[List[dict]]) -> None:
+        if substitute_paths is not None:
+            self._substitute_paths = substitute_paths
+
+    def set_relative_prefixes(self, relative_prefixes: Optional[str]) -> None:
+        if relative_prefixes is not None:
+            self._relative_prefixes = relative_prefixes
+
+    def substitute_path(self, path: str) -> str:
+        for s in self._substitute_paths:
+            path = path.replace(s.get("from"), s.get("to"))
+        return path
+
+    def relativize(self, path: str) -> str:
+        for p in self._relative_prefixes:
+            if path.startswith(p):
+                path = path.replace(p, "")
+                if path.startswith("/"):
+                    path = path[1:]
+        return path
 
     def get_num_errors(self) -> int:
         if self._source_dir is None:

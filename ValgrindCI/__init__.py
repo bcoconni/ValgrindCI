@@ -17,7 +17,30 @@ def main():
         help="specifies the source directory",
     )
     parser.add_argument(
+        "--substitute-path",
+        action="append",
+        help="specifies a substitution rule `from:to` for finding source files on disk. example: --substitute-path /foo:/bar",
+        nargs='?'
+    )
+    parser.add_argument(
+        "--relativize",
+        action="append",
+        help="specifies a prefix to remove from displayed source filenames. example: --relativize /foo/bar",
+        nargs='?'
+    )
+    parser.add_argument(
+        "--relativize-from-substitute-paths",
+        default=False,
+        action="store_true",
+        help="use the `from` values in the substitution rules as prefixes to remove from displayed source filenames",
+    )
+    parser.add_argument(
         "--output-dir", help="directory where the HTML report will be generated"
+    )
+    parser.add_argument(
+        "--html-report-title",
+        default="ValgrindCI Report",
+        help="the title of the generated HTML report"
     )
     parser.add_argument(
         "--summary",
@@ -55,6 +78,27 @@ def main():
     data.parse(args.xml_file)
     data.set_source_dir(args.source_dir)
 
+    if args.substitute_path:
+        substitute_paths = []
+        for s in args.substitute_path:
+            substitute_paths.append({"from": s.split(":")[0], "to": s.split(":")[1] })
+        data.set_substitute_paths(substitute_paths)
+
+    if args.relativize:
+        prefixes = []
+        for p in args.relativize:
+            prefixes.append(p)
+        data.set_relative_prefixes(prefixes)
+
+    if args.relativize_from_substitute_paths:
+        if not args.substitute_path:
+            print("No substitution paths specified on the command line.")
+        else:
+            prefixes = data._relative_prefixes.copy()
+            for s in data._substitute_paths:
+                prefixes.append(s.get("from"))
+            data.set_relative_prefixes(prefixes)
+
     errors_total = data.get_num_errors()
     if args.abort_on_errors and errors_total != 0:
         print("{} errors reported by Valgrind - Abort".format(errors_total))
@@ -63,7 +107,7 @@ def main():
     if args.output_dir:
         renderer = HTMLRenderer(data)
         renderer.set_source_dir(args.source_dir)
-        renderer.render(args.output_dir, args.lines_before, args.lines_after)
+        renderer.render(args.html_report_title, args.output_dir, args.lines_before, args.lines_after)
 
     if args.number_of_errors:
         print("{} errors.".format(errors_total))
